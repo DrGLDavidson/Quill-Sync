@@ -1,12 +1,10 @@
 # Quill Sync
 
-**Field biometric data capture for bird ringing studies**
+**enter and validate bird ringing data in the field**
 
 *Built by ACME Research · Davidson Lab*
 
 ---
-
-![Quill Sync header showing Davidson Lab logo, dark green interface](screenshot_placeholder.png)
 
 Quill Sync is a browser-based field data entry application for bird ringing and biometric studies. It runs entirely offline on a tablet or mobile device, requires no installation, and exports data as a standard CSV file compatible with downstream analysis pipelines. It was built for autumn and winter passerine ringing at mist-net stations, with real-time validation against BTO age codes, species biometric ranges, and individual bird histories.
 
@@ -30,7 +28,6 @@ Quill Sync is a browser-based field data entry application for bird ringing and 
 - [Recommended Hardware](#recommended-hardware)
 - [Licence](#licence)
 - [Citation](#citation)
-- [Contributing](#contributing)
 
 ---
 
@@ -321,7 +318,7 @@ Quill Sync is designed to work without internet access in the field. All data is
 
 ## Recommended Hardware
 
-Quill Sync works on any Android or iOS tablet with a modern browser. For field use, we recommend:
+Quill Sync works on any Android or iOS tablet/laptop with a modern browser. For field use, we recommend:
 
 **Minimum spec:**
 - Android tablet with 4GB RAM
@@ -329,16 +326,6 @@ Quill Sync works on any Android or iOS tablet with a modern browser. For field u
 - 8–10" screen
 - USB-C with OTG support
 - 5000mAh+ battery
-
-**Recommended models (as of 2025):**
-- Samsung Galaxy Tab A9 4G (~£229) — best browser compatibility, widely available, cellular option available
-- Lenovo Tab M10 Plus Gen 3 4G (~£199) — larger screen, 7700mAh battery, good for long sessions
-
-**Accessories:**
-- Hand strap / ring case for one-handed holding while the other hand holds the bird
-- Screen protector with anti-glare coating for outdoor readability
-- Clip-on macro lens for reliable PIT tag barcode scanning in field conditions
-- Glove mode enabled in display settings for cold-weather use (Samsung: Settings → Display → Touch sensitivity)
 
 ---
 
@@ -368,17 +355,5 @@ A BibTeX entry is available in `CITATION.bib`.
 
 ---
 
-## Contributing
 
-Quill Sync was built for a specific field context — autumn and winter passerine ringing with PIT tag deployment — but it is intentionally extensible. If you adapt it for a different ringing scheme, species set, or geographic context, we'd welcome:
-
-- **Bug reports** via GitHub Issues
-- **Pull requests** for fixes or clearly scoped improvements
-- **Species range data** for non-British species sets
-- **Translations** of the interface for non-English field teams
-
-Please open an issue before starting significant development so we can discuss fit and avoid duplicated effort.
-
----
-
-*Quill Sync is built by ACME Research (Animal Cognition and Microbial Ecology), Davidson Lab. ACME — from the Greek ἀκμή, meaning the highest point or prime.*
+*Quill Sync is built by ACME Research (Animal Cognition and Microbial Ecology), Davidson Lab.*
