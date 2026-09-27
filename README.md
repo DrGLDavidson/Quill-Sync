@@ -280,15 +280,23 @@ Tapping a slot switches the Entry form to that ringer's data. The other ringer's
 
 ## Exporting Data
 
-On the **Records tab**, tap **⬇ Export CSV**. The file is saved as:
+Every time an entry is saved with **Save ✓**, Quill Sync immediately downloads a CSV containing that single entry. The file is named:
 
 ```
-QuillSync_[SiteName]_[Date].csv
+entry_save_YYYY-MM-DD-HH-MM-SS.csv
 ```
 
-The CSV is UTF-8 encoded with a byte order mark (BOM) for correct Excel compatibility. It contains all records from the current session, including a `flagged` column showing ERROR, WARN, or blank for each record.
+This provides an individual backup for each saved record. To export all records currently stored for the session, open the **Records** tab and tap **⬇ Export CSV**. The file is named:
 
-> **Tip:** Export at the end of each session and again after any significant batch of birds, as a backup. Data lives in browser localStorage — clearing your browser data will erase it.
+```
+Quill_Sync_Records_YYYY-MM-DD-HH-MM-SS.csv
+```
+
+Both CSV types are UTF-8 encoded with a byte order mark (BOM) for correct Excel compatibility. The session export contains all records currently stored in the app, including a `flagged` column showing ERROR, WARN, or blank for each record.
+
+The browser chooses the download folder; the HTML file cannot specify an arbitrary filesystem path. Set the browser to ask where to save downloads, or configure a dedicated folder such as `Quill Sync/Entry Saves` and `Quill Sync/Session Exports`. Check that the file appears after each save and copy exports to a second device or drive when possible.
+
+> **Tip:** Export the complete session at the end of every field session and after any significant batch of birds. Individual entry downloads are an additional backup, not a replacement for keeping a copy of the complete session export.
 
 ---
 

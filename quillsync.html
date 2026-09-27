@@ -266,15 +266,16 @@ select option{background:var(--surf2);}
         <select id="age" onchange="onAgeChange()">
           <option value="">—</option>
           <option value="1">1 – Pullus</option>
-          <option value="2">2 – Full grown</option>
-          <option value="3">3 – Juvenile</option>
-          <option value="4">4 – Juv / 1st yr</option>
-          <option value="5">5 – 1st year</option>
-          <option value="6">6 – 1st yr / older</option>
-          <option value="7">7 – 2nd year</option>
-          <option value="8">8 – 2nd yr / older</option>
-          <option value="9">9 – Adult</option>
-          <option value="U">U – Unknown</option>
+          <option value="2">2 – Full grown, hatching year unknown</option>
+          <option value="3">3 – Definitely hatched current calendar year</option>
+          <option value="4">4 – Hatched before current calendar year</option>
+          <option value="5">5 – Definitely hatched previous calendar year</option>
+          <option value="6">6 – Hatched before last calendar year</option>
+          <option value="7">7 – Definitely hatched in calendar year before last</option>
+          <option value="8">8 – Hatched 3 or more years ago</option>
+          <option value="9">9 – Definitely hatched 3 years ago</option>
+          <option value="0">0 – age unknown - no idea if nestling or full grown</option>
+          <option value="3J">3J – definitely hatched current calendar year, still in juvenile plumage</option>
         </select>
         <div class="flag" id="flag-age"></div>
       </div>
@@ -484,52 +485,59 @@ select option{background:var(--surf2);}
 
 <script>
 const DEFAULT_SPECIES=[
-  {code:"ROBIN",name:"Robin",wingMin:70,wingMax:82,wtMin:11,wtMax:22},
-  {code:"BLUE",name:"Blue Tit",wingMin:60,wingMax:70,wtMin:8,wtMax:14},
-  {code:"GRETI",name:"Great Tit",wingMin:69,wingMax:80,wtMin:14,wtMax:22},
-  {code:"MARSH",name:"Marsh Tit",wingMin:62,wingMax:70,wtMin:9,wtMax:14},
-  {code:"WILTI",name:"Willow Tit",wingMin:62,wingMax:70,wtMin:8,wtMax:13},
-  {code:"LOTTI",name:"Long-tailed Tit",wingMin:53,wingMax:62,wtMin:7,wtMax:10},
-  {code:"CHAFF",name:"Chaffinch",wingMin:81,wingMax:92,wtMin:17,wtMax:30},
-  {code:"GREEN",name:"Greenfinch",wingMin:83,wingMax:96,wtMin:23,wtMax:40},
-  {code:"GOLDF",name:"Goldfinch",wingMin:68,wingMax:78,wtMin:12,wtMax:19},
-  {code:"SISKIN",name:"Siskin",wingMin:67,wingMax:75,wtMin:11,wtMax:18},
-  {code:"LINNET",name:"Linnet",wingMin:72,wingMax:83,wtMin:15,wtMax:24},
-  {code:"LESRE",name:"Lesser Redpoll",wingMin:66,wingMax:76,wtMin:9,wtMax:15},
-  {code:"COMRE",name:"Common Redpoll",wingMin:70,wingMax:80,wtMin:12,wtMax:18},
-  {code:"BULLN",name:"Bullfinch",wingMin:80,wingMax:92,wtMin:20,wtMax:36},
-  {code:"HSPRO",name:"House Sparrow",wingMin:71,wingMax:82,wtMin:21,wtMax:35},
-  {code:"TRSPA",name:"Tree Sparrow",wingMin:67,wingMax:75,wtMin:18,wtMax:26},
-  {code:"DUNNO",name:"Dunnock",wingMin:61,wingMax:70,wtMin:15,wtMax:24},
-  {code:"WREN",name:"Wren",wingMin:42,wingMax:52,wtMin:7,wtMax:13},
-  {code:"WHEAT",name:"Wheatear",wingMin:89,wingMax:104,wtMin:18,wtMax:35},
-  {code:"REDST",name:"Redstart",wingMin:72,wingMax:82,wtMin:12,wtMax:20},
-  {code:"BLACK",name:"Blackbird",wingMin:119,wingMax:138,wtMin:75,wtMax:130},
-  {code:"SONTH",name:"Song Thrush",wingMin:112,wingMax:124,wtMin:65,wtMax:100},
-  {code:"REDWI",name:"Redwing",wingMin:115,wingMax:128,wtMin:50,wtMax:90},
-  {code:"FLTHR",name:"Fieldfare",wingMin:136,wingMax:152,wtMin:85,wtMax:140},
-  {code:"MISTL",name:"Mistle Thrush",wingMin:140,wingMax:157,wtMin:100,wtMax:160},
-  {code:"GARGW",name:"Garden Warbler",wingMin:71,wingMax:83,wtMin:14,wtMax:25},
-  {code:"BLACW",name:"Blackcap",wingMin:68,wingMax:80,wtMin:13,wtMax:23},
-  {code:"LESWH",name:"Lesser Whitethroat",wingMin:59,wingMax:70,wtMin:10,wtMax:17},
-  {code:"COMWH",name:"Common Whitethroat",wingMin:61,wingMax:74,wtMin:11,wtMax:22},
-  {code:"SEDGE",name:"Sedge Warbler",wingMin:57,wingMax:68,wtMin:10,wtMax:17},
-  {code:"REEDW",name:"Reed Warbler",wingMin:58,wingMax:70,wtMin:10,wtMax:19},
-  {code:"CHIFF",name:"Chiffchaff",wingMin:52,wingMax:63,wtMin:7,wtMax:12},
-  {code:"WILWA",name:"Willow Warbler",wingMin:58,wingMax:70,wtMin:7,wtMax:14},
-  {code:"WOOWA",name:"Wood Warbler",wingMin:67,wingMax:78,wtMin:8,wtMax:15},
-  {code:"GDCRE",name:"Goldcrest",wingMin:49,wingMax:56,wtMin:4,wtMax:8},
-  {code:"FICRE",name:"Firecrest",wingMin:49,wingMax:56,wtMin:4,wtMax:8},
-  {code:"SPFLY",name:"Spotted Flycatcher",wingMin:82,wingMax:92,wtMin:13,wtMax:22},
-  {code:"PIFLY",name:"Pied Flycatcher",wingMin:73,wingMax:83,wtMin:12,wtMax:17},
-  {code:"TREEC",name:"Treecreeper",wingMin:57,wingMax:65,wtMin:8,wtMax:12},
-  {code:"NUTCH",name:"Nuthatch",wingMin:83,wingMax:91,wtMin:19,wtMax:27},
-  {code:"SWIFN",name:"Swift",wingMin:161,wingMax:180,wtMin:35,wtMax:56},
-  {code:"GREAT",name:"Great Spotted Woodpecker",wingMin:136,wingMax:152,wtMin:70,wtMax:100},
-  {code:"YELLO",name:"Yellowhammer",wingMin:86,wingMax:96,wtMin:23,wtMax:35},
-  {code:"REEDM",name:"Reed Bunting",wingMin:73,wingMax:85,wtMin:17,wtMax:28},
-  {code:"SNBLA",name:"Stonechat",wingMin:64,wingMax:72,wtMin:13,wtMax:20},
-  {code:"WINCH",name:"Whinchat",wingMin:71,wingMax:80,wtMin:14,wtMax:22},
+    {code:"BLABI",name:"Blackbird",wingMin:116,wingMax:141,wtMin:74,wtMax:140},
+  {code:"BLACA",name:"Blackcap",wingMin:68,wingMax:80,wtMin:13,wtMax:24},
+  {code:"BLUTI",name:"Blue Tit",wingMin:57,wingMax:69,wtMin:8,wtMax:14},
+  {code:"BULLF",name:"Bullfinch",wingMin:75,wingMax:89,wtMin:16,wtMax:28},
+  {CODE:"CETWA",name:"Cetti's Warbler",wingMin:49,wingMax:69,wtMin:8,wtMax:18},
+  {code:"CHAFF",name:"Chaffinch",wingMin:75,wingMax:95,wtMin:16,wtMax:28},
+  {code:"CHIFF",name:"Chiffchaff",wingMin:51,wingMax:67,wtMin:5,wtMax:11},
+  {code: "COATI",name:"Coal Tit",wingMin:56,wingMax:65,wtMin:7,wtMax:11},
+  {code:"COMRE",name:"Common Redpoll",wingMin:67,wingMax:89,wtMin:0,wtMax:100},
+  {code:"DUNNO",name:"Dunnock",wingMin:64,wingMax:77,wtMin:15,wtMax:26},
+  {code:"FIELD",name:"Fieldfare",wingMin:136,wingMax:158,wtMin:75,wtMax:135},
+  {code:"FICRE",name:"Firecrest",wingMin:48,wingMax:57,wtMin:4,wtMax:7},
+  {code:"GARWA",name:"Garden Warbler",wingMin:72,wingMax:83,wtMin:13,wtMax:24},
+  {code:"GDCRE",name:"Goldcrest",wingMin:48,wingMax:58,wtMin:4,wtMax:7},
+  {code:"GOLDF",name:"Goldfinch",wingMin:71,wingMax:84,wtMin:12,wtMax:20},
+  {code:"GRSWO",name:"Great Spotted Woodpecker",wingMin:124,wingMax:139,wtMin:66,wtMax:90},
+  {code:"GRETI",name:"Great Tit",wingMin:68,wingMax:81,wtMin:15,wtMax:22},
+  {code:"GREFI",name:"Greenfinch",wingMin:81,wingMax:94,wtMin:22,wtMax:35},
+  {code:"HOUSP",name:"House Sparrow",wingMin:69,wingMax:83,wtMin:18,wtMax:33},
+  {code:"JACKD",name:"Jackdaw",wingMin:198,wingMax:259,wtMin:174,wtMax:286},
+  {code:"JAY",name:"Jay",wingMin:164,wingMax:197,wtMin:131,wtMax:202},
+  {code:"KESTR",name:"Kestrel",wingMin:203,wingMax:274,wtMin:117,wtMax:299},
+  {code:"LESRE",name:"Lesser Redpoll",wingMin:65,wingMax:85,wtMin:9,wtMax:15},
+  {code:"LESWH",name:"Lesser Whitethroat",wingMin:60,wingMax:70,wtMin:9,wtMax:15},
+  {code:"LINNE",name:"Linnet",wingMin:74,wingMax:86,wtMin:14,wtMax:24},
+  {code:"LOTTI",name:"Long-tailed Tit",wingMin:55,wingMax:64,wtMin:6,wtMax:10},
+  {code:"MAGPI",name:"Magpie",wingMin:164,wingMax:206,wtMin:145,wtMax:275},
+  {code:"MARTI",name:"Marsh Tit",wingMin:57,wingMax:67,wtMin:9,wtMax:13},
+  {code:"MISTH",name:"Mistle Thrush",wingMin:142,wingMax:169,wtMin:95,wtMax:155},
+  {code:"NUTCH",name:"Nuthatch",wingMin:78,wingMax:92,wtMin:18,wtMax:25},
+  {code:"PIEFL",name:"Pied Flycatcher",wingMin:73,wingMax:84,wtMin:9,wtMax:17},
+  {code:"REEBU",name:"Reed Bunting",wingMin:68,wingMax:87,wtMin:14,wtMax:26},
+  {code:"REEWA",name:"Reed Warbler",wingMin:57,wingMax:71,wtMin:8,wtMax:18},
+  {code:"REDST",name:"Redstart",wingMin:70,wingMax:87,wtMin:11,wtMax:18},
+  {code:"REDWI",name:"Redwing",wingMin:110,wingMax:130,wtMin:45,wtMax:90},
+  {code:"ROBIN",name:"Robin",wingMin:65,wingMax:80,wtMin:13,wtMax:24},
+  {code:"SEDWA",name:"Sedge Warbler",wingMin:60,wingMax:71,wtMin:8,wtMax:18},
+  {code:"SISKI",name:"Siskin",wingMin:67,wingMax:78,wtMin:10,wtMax:18},
+  {code:"SONTH",name:"Song Thrush",wingMin:109,wingMax:128,wtMin:55,wtMax:95},
+  {CODE:"SPARR",name:"Sparrowhawk",wingMin:163,wingMax:253,wtMin:115,wtMax:330},
+  {code:"SPOFL",name:"Spotted Flycatcher",wingMin:80,wingMax:94,wtMin:11,wtMax:19},
+  {code:"STOCH",name:"Stonechat",wingMin:63,wingMax:71,wtMin:13,wtMax:19},
+  {code:"SWIFT",name:"Swift",wingMin:162,wingMax:185,wtMin:30,wtMax:49},
+  {code:"TREEC",name:"Treecreeper",wingMin:57,wingMax:70,wtMin:6,wtMax:12},
+  {code:"TRESP",name:"Tree Sparrow",wingMin:63,wingMax:76,wtMin:16,wtMax:25},
+  {code:"WHEAT",name:"Wheatear",wingMin:87,wingMax:112,wtMin:15,wtMax:44},
+  {code:"WINCH",name:"Whinchat",wingMin:70,wingMax:81,wtMin:12,wtMax:24},
+  {code:"WHITE",name:"Whitethroat",wingMin:65,wingMax:75,wtMin:10,wtMax:20},
+  {code:"WILTI",name:"Willow Tit",wingMin:54,wingMax:64,wtMin:8,wtMax:12},
+  {code:"WILWA",name:"Willow Warbler",wingMin:58,wingMax:73,wtMin:6,wtMax:12},
+  {code:"WOOWA",name:"Wood Warbler",wingMin:63,wingMax:83,wtMin:6,wtMax:14},
+  {code:"WREN",name:"Wren",wingMin:43,wingMax:54,wtMin:7,wtMax:13},
+  {code:"YELHA",name:"Yellowhammer",wingMin:76,wingMax:94,wtMin:20,wtMax:31},
 ];
 
 let records=[],importedIndividuals=[],speciesDB={},ringers=[];
@@ -817,6 +825,7 @@ function doSaveRecord(issues){
     initials:$v('initials'),pittagNo:$v('pittagNo').toUpperCase(),pitType:$v('pitType'),
     comment:$v('comment'),ringer:activeRinger,hasErrors,hasWarns};
   records.push(record);persist();updateStats();advanceRingSeries();
+  downloadCSV([record],'entry_save_'+fileTimestamp()+'.csv');
   const btn=document.getElementById('saveBtn');const orig=btn.textContent;
   btn.textContent='✓ Saved!';setTimeout(()=>{btn.textContent=orig;},900);
   ringerState[activeRinger]={};clearFormFields();stampDateTime();
@@ -997,15 +1006,21 @@ async function openScanner(){
 }
 function closeScanner(){if(codeReader){try{codeReader.reset();}catch(e){}codeReader=null;}document.getElementById('scanModal').classList.remove('open');document.getElementById('camVideo').srcObject=null;}
 
-function exportCSV(){
+function fileTimestamp(){
+  const d=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'-'+pad(d.getHours())+'-'+pad(d.getMinutes())+'-'+pad(d.getSeconds());
+}
+function downloadCSV(rows,filename){
   const headers=['location','date','species','ringNo','ringType','age','sex','sexingMethod','wing','weight','fecalSample','time','initials','pittagNo','pitType','comment','site','savedAt','flagged'];
-  const rows=records.map(r=>[r.location,r.date,r.species,r.ringNo,r.ringType,r.age,r.sex,r.sexingMethod,r.wing,r.weight,r.fecalSample,r.time,r.initials,r.pittagNo,r.pitType,r.comment,r.site,r.savedAt,r.hasErrors?'ERROR':r.hasWarns?'WARN':''].map(v=>{const s=String(v===undefined||v===null?'':v);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}));
-  const csv=[headers,...rows].map(r=>r.join(',')).join('\n');
+  const csvRows=rows.map(r=>[r.location,r.date,r.species,r.ringNo,r.ringType,r.age,r.sex,r.sexingMethod,r.wing,r.weight,r.fecalSample,r.time,r.initials,r.pittagNo,r.pitType,r.comment,r.site,r.savedAt,r.hasErrors?'ERROR':r.hasWarns?'WARN':''].map(v=>{const s=String(v===undefined||v===null?'':v);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}));
+  const csv=[headers,...csvRows].map(r=>r.join(',')).join('\n');
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');
-  a.href=url;a.download='QuillSync_'+(session.site||'ringing')+'_'+(session.date||today())+'.csv';
+  a.href=url;a.download=filename;
   a.click();URL.revokeObjectURL(url);
 }
+function exportCSV(){downloadCSV(records,'Quill_Sync_Records_'+fileTimestamp()+'.csv');}
 
 function clearAllRecords(){if(!confirm('Delete all '+records.length+' records?'))return;records=[];persist();renderRecords();updateStats();}
 function resetAll(){if(!confirm('Reset everything including imported individuals?'))return;records=[];importedIndividuals=[];speciesDB={};ringers=[];persist();loadDefaultSpecies(true);renderRecords();renderRingerList();populateInitialsDropdown();updateStats();updateImportStatus();}
