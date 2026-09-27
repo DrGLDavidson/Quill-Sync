@@ -12,7 +12,7 @@
   --border:#354340;--accent:#5dbe8a;--accent2:#3d9e6a;
   --r1:#4a9ede;--r1-dim:#1a3550;--r2:#de7a4a;--r2-dim:#50281a;
   --warn:#e8b84a;--err:#d94f4f;--ok:#5dbe8a;
-  --text:#e2ece6;--text2:#8aab96;--text3:#536860;
+  --text:#e2ece6;--text2:#8aab96;--text3:#536860;--placeholder:#b8c2bc;
   --radius:10px;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -28,7 +28,7 @@ header{background:var(--surf);border-bottom:1px solid var(--border);padding:7px 
 .logo-disc img{width:38px;height:38px;border-radius:50%;object-fit:cover;}
 .header-text{flex:1;}
 .header-title{font-size:17px;font-weight:800;color:var(--accent);letter-spacing:.02em;line-height:1.1;}
-.header-sub{font-size:10px;color:var(--text3);letter-spacing:.03em;margin-top:1px;}
+.header-sub{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.03em;margin-top:1px;}
 .session-chip{font-size:11px;color:var(--text2);text-align:right;line-height:1.5;flex-shrink:0;}
 
 /* RINGER BAR */
@@ -46,7 +46,7 @@ header{background:var(--surf);border-bottom:1px solid var(--border);padding:7px 
 
 /* TABS */
 .tabs{display:flex;background:var(--surf);border-bottom:1px solid var(--border);flex-shrink:0;}
-.tab{flex:1;padding:9px 2px;text-align:center;font-size:12px;font-weight:600;color:var(--text3);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
+.tab{flex:1;padding:9px 2px;text-align:center;font-size:12px;font-weight:600;color:var(--placeholder);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
 
 /* PANELS */
@@ -62,6 +62,7 @@ header{background:var(--surf);border-bottom:1px solid var(--border);padding:7px 
 .field.span3{grid-column:span 3;}
 label{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;}
 input,select{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:17px;font-weight:600;padding:9px 11px;width:100%;-webkit-appearance:none;appearance:none;transition:border-color .15s;min-height:46px;}
+input::placeholder{color:var(--placeholder);opacity:1;}
 input:focus,select:focus{outline:none;border-color:var(--accent);}
 input.is-err{border-color:var(--err)!important;background:#2a1414;}
 input.is-warn{border-color:var(--warn)!important;background:#2a2210;}
@@ -96,6 +97,8 @@ select option{background:var(--surf2);}
 .btn-danger{background:#7a2020;color:#fff;flex:1;}
 .btn-warn{background:#5a3a10;color:#ffd080;flex:1;}
 .btn-row{display:flex;gap:7px;}
+.btn-help{flex:1;display:flex;flex-direction:column;gap:3px;}
+.btn-help-text{font-size:12px;color:var(--text2);margin:0 0 2px;}
 
 .card{background:var(--surf);border:1px solid var(--border);border-radius:var(--radius);padding:11px;}
 .card-title{font-size:12px;font-weight:800;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;}
@@ -166,7 +169,7 @@ select option{background:var(--surf2);}
   </div>
   <div class="header-text">
     <div class="header-title">Quill Sync</div>
-    <div class="header-sub">ACME Research · Davidson Lab</div>
+    <div class="header-sub">Built by ACME Research · Davidson Lab</div>
   </div>
   <div class="session-chip" id="sessionChip">—</div>
 </header>
@@ -205,8 +208,12 @@ select option{background:var(--surf2);}
         <select id="initials" onchange="onInitialsChange()"><option value="">—</option></select>
       </div>
       <div class="field">
-        <label>Date / Time</label>
-        <input type="text" id="entryDateTime" readonly style="color:var(--text2);font-size:14px;">
+        <label>Entry Date</label>
+        <input type="date" id="entryDate" readonly style="color:var(--text2);font-size:14px;">
+      </div>
+      <div class="field">
+        <label>Entry Time</label>
+        <input type="time" id="entryTime" readonly style="color:var(--text2);font-size:14px;">
       </div>
     </div>
   </div>
@@ -345,7 +352,10 @@ select option{background:var(--surf2);}
 <div class="panel" id="panel-records">
   <div class="btn-row">
     <button class="btn btn-secondary" onclick="exportCSV()">⬇ Export CSV</button>
-    <button class="btn btn-secondary" onclick="renderRecords()">↻ Refresh</button>
+    <div class="btn-help">
+      <button class="btn btn-secondary" onclick="renderRecords()">↻ Refresh</button>
+      <p class="btn-help-text">Tap Refresh to populate the most recent saved records.</p>
+    </div>
   </div>
   <div id="recordsList"></div>
 </div>
@@ -370,9 +380,9 @@ select option{background:var(--surf2);}
   <div class="card">
     <div class="card-title">Session Details</div>
     <div class="form-grid">
-      <div class="field"><label>Site Name</label><input type="text" id="siteName" placeholder="e.g. Wicken Fen" oninput="saveSession()"></div>
-      <div class="field"><label>Session Date</label><input type="date" id="sessionDate" oninput="saveSession()"></div>
-      <div class="field span2"><label>Default Location</label><input type="text" id="defaultLocation" placeholder="e.g. Mist nets, south ride" oninput="saveSession()"></div>
+      <div class="field"><label>Site Name</label><input type="text" id="siteName" placeholder="e.g. Wicken Fen"></div>
+      <div class="field"><label>Session Date</label><input type="date" id="sessionDate" onchange="selectSessionDate()"></div>
+      <div class="field span2"><label>Default Location</label><input type="text" id="defaultLocation" placeholder="e.g. Mist nets, south ride"></div>
     </div>
   </div>
 
@@ -395,8 +405,8 @@ select option{background:var(--surf2);}
     <div class="card-title">Ring Series Shortcut</div>
     <p style="font-size:12px;color:var(--text2);margin:0 0 8px">Auto-increments after each save.</p>
     <div class="form-grid">
-      <div class="field"><label>Prefix</label><input type="text" id="ringPrefix" placeholder="A" maxlength="4" autocorrect="off" autocapitalize="characters" oninput="saveSession()"></div>
-      <div class="field"><label>Last Number Used</label><input type="number" id="ringLastNum" placeholder="123456" inputmode="numeric" oninput="saveSession()"></div>
+      <div class="field"><label>Prefix</label><input type="text" id="ringPrefix" placeholder="A" maxlength="4" autocorrect="off" autocapitalize="characters"></div>
+      <div class="field"><label>Last Number Used</label><input type="number" id="ringLastNum" placeholder="123456" inputmode="numeric"></div>
     </div>
     <div style="margin-top:8px;"><button class="btn btn-secondary" onclick="applyNextRing()">▶ Fill Next Ring Now</button></div>
   </div>
@@ -433,6 +443,9 @@ select option{background:var(--surf2);}
       <button class="btn btn-danger" onclick="clearAllRecords()">Clear Records</button>
       <button class="btn btn-danger" onclick="resetAll()">Reset All</button>
     </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="saveSessionBtn" onclick="saveSession()">Save Session</button>
   </div>
   <div style="height:10px;"></div>
 </div>
@@ -489,7 +502,7 @@ const DEFAULT_SPECIES=[
   {code:"BLACA",name:"Blackcap",wingMin:68,wingMax:80,wtMin:13,wtMax:24},
   {code:"BLUTI",name:"Blue Tit",wingMin:57,wingMax:69,wtMin:8,wtMax:14},
   {code:"BULLF",name:"Bullfinch",wingMin:75,wingMax:89,wtMin:16,wtMax:28},
-  {CODE:"CETWA",name:"Cetti's Warbler",wingMin:49,wingMax:69,wtMin:8,wtMax:18},
+  {code:"CETWA",name:"Cetti's Warbler",wingMin:49,wingMax:69,wtMin:8,wtMax:18},
   {code:"CHAFF",name:"Chaffinch",wingMin:75,wingMax:95,wtMin:16,wtMax:28},
   {code:"CHIFF",name:"Chiffchaff",wingMin:51,wingMax:67,wtMin:5,wtMax:11},
   {code: "COATI",name:"Coal Tit",wingMin:56,wingMax:65,wtMin:7,wtMax:11},
@@ -524,7 +537,7 @@ const DEFAULT_SPECIES=[
   {code:"SEDWA",name:"Sedge Warbler",wingMin:60,wingMax:71,wtMin:8,wtMax:18},
   {code:"SISKI",name:"Siskin",wingMin:67,wingMax:78,wtMin:10,wtMax:18},
   {code:"SONTH",name:"Song Thrush",wingMin:109,wingMax:128,wtMin:55,wtMax:95},
-  {CODE:"SPARR",name:"Sparrowhawk",wingMin:163,wingMax:253,wtMin:115,wtMax:330},
+  {code:"SPARR",name:"Sparrowhawk",wingMin:163,wingMax:253,wtMin:115,wtMax:330},
   {code:"SPOFL",name:"Spotted Flycatcher",wingMin:80,wingMax:94,wtMin:11,wtMax:19},
   {code:"STOCH",name:"Stonechat",wingMin:63,wingMax:71,wtMin:13,wtMax:19},
   {code:"SWIFT",name:"Swift",wingMin:162,wingMax:185,wtMin:30,wtMax:49},
@@ -540,14 +553,17 @@ const DEFAULT_SPECIES=[
   {code:"YELHA",name:"Yellowhammer",wingMin:76,wingMax:94,wtMin:20,wtMax:31},
 ];
 
-let records=[],importedIndividuals=[],speciesDB={},ringers=[];
+let records=[],importedIndividuals=[],speciesDB={},ringers=[],sessions={};
 let session={site:'',date:today(),defaultLocation:'',ringPrefix:'',ringLastNum:'',assignedR1:'',assignedR2:''};
 let activeRinger=1,ringerState={1:{},2:{}};
 let confirmYesCb=null,pitReplaceContext=null;
 
-function today(){return new Date().toISOString().slice(0,10);}
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function nowTime(){const n=new Date();return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
 function $v(id){const el=document.getElementById(id);return el?el.value:'';}
+function sessionId(date){return 'Session_'+date;}
+function blankSession(date){return{site:'',date:date||today(),defaultLocation:'',ringPrefix:'',ringLastNum:'',assignedR1:'',assignedR2:''};}
+function normaliseSession(data,date){return{...blankSession(date),...(data||{}),date:date||data?.date||today()};}
 
 function getIndividuals(){
   const map={};
@@ -595,20 +611,31 @@ function loadState(){
     importedIndividuals=JSON.parse(localStorage.getItem('qs_imported')||'[]');
     speciesDB=JSON.parse(localStorage.getItem('qs_species')||'{}');
     ringers=JSON.parse(localStorage.getItem('qs_ringers')||'[]');
-    const s=JSON.parse(localStorage.getItem('qs_session')||'{}');
-    session={site:s.site||'',date:s.date||today(),defaultLocation:s.defaultLocation||'',
-      ringPrefix:s.ringPrefix||'',ringLastNum:s.ringLastNum||'',
-      assignedR1:s.assignedR1||'',assignedR2:s.assignedR2||''};
+    sessions=JSON.parse(localStorage.getItem('qs_sessions')||'{}');
+    const legacy=JSON.parse(localStorage.getItem('qs_session')||'{}');
+    if(!Object.keys(sessions).length&&legacy.date){
+      session=normaliseSession(legacy,legacy.date);
+      sessions[sessionId(session.date)]={...session};
+    }else{
+      const savedId=localStorage.getItem('qs_active_session');
+      const available=Object.keys(sessions).sort();
+      const id=savedId&&sessions[savedId]?savedId:(available[available.length-1]||sessionId(today()));
+      session=normaliseSession(sessions[id],id.replace(/^Session_/,'')||today());
+    }
     if(Object.keys(speciesDB).length===0)loadDefaultSpecies(true);
-  }catch(e){loadDefaultSpecies(true);}
+    persist();
+  }catch(e){sessions={};session=blankSession(today());loadDefaultSpecies(true);}
 }
 function persist(){
   try{
+    sessions[sessionId(session.date)]={...session};
     localStorage.setItem('qs_records',JSON.stringify(records));
     localStorage.setItem('qs_imported',JSON.stringify(importedIndividuals));
     localStorage.setItem('qs_species',JSON.stringify(speciesDB));
     localStorage.setItem('qs_ringers',JSON.stringify(ringers));
     localStorage.setItem('qs_session',JSON.stringify(session));
+    localStorage.setItem('qs_sessions',JSON.stringify(sessions));
+    localStorage.setItem('qs_active_session',sessionId(session.date));
   }catch(e){}
 }
 
@@ -620,21 +647,34 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('initials').value=session.assignedR1||'';
 });
 
-function stampDateTime(){document.getElementById('entryDateTime').value=(session.date||today())+'  '+nowTime();}
+function stampDateTime(){document.getElementById('entryDate').value=session.date||today();document.getElementById('entryTime').value=nowTime();}
 function populateSessionFields(){
   document.getElementById('siteName').value=session.site;
   document.getElementById('sessionDate').value=session.date;
   document.getElementById('defaultLocation').value=session.defaultLocation;
   document.getElementById('ringPrefix').value=session.ringPrefix;
   document.getElementById('ringLastNum').value=session.ringLastNum;
+  updateSessionSaveButton();
+}
+function updateSessionSaveButton(){const btn=document.getElementById('saveSessionBtn');if(btn)btn.textContent='Save '+sessionId(session.date);}
+function selectSessionDate(){
+  const date=$v('sessionDate')||today();
+  session=normaliseSession(sessions[sessionId(date)],date);
+  ringerState={1:{},2:{}};
+  populateSessionFields();populateRingerAssignDropdowns();updateSessionChip();updateRingerBar();
+  clearFormFields();stampDateTime();document.getElementById('initials').value=session.assignedR1||'';
+  updateRingerPreview(activeRinger,getFormData());runAllValidation();
 }
 function saveSession(){
-  session.site=document.getElementById('siteName').value;
-  session.date=document.getElementById('sessionDate').value;
-  session.defaultLocation=document.getElementById('defaultLocation').value;
-  session.ringPrefix=document.getElementById('ringPrefix').value.toUpperCase();
-  session.ringLastNum=document.getElementById('ringLastNum').value;
-  persist();updateSessionChip();
+  const date=$v('sessionDate')||today();
+  session=normaliseSession({site:$v('siteName'),date,defaultLocation:$v('defaultLocation'),
+    ringPrefix:$v('ringPrefix').toUpperCase(),ringLastNum:$v('ringLastNum'),
+    assignedR1:session.assignedR1,assignedR2:session.assignedR2},date);
+  sessions[sessionId(date)]={...session};
+  persist();populateSessionFields();updateSessionChip();populateRingerAssignDropdowns();updateRingerBar();
+  document.getElementById('location').value=session.defaultLocation;
+  document.getElementById('initials').value=session.assignedR1||'';
+  alert('Saved '+sessionId(date));
 }
 function updateSessionChip(){document.getElementById('sessionChip').innerHTML=(session.site||'No site')+'<br>'+(session.date||today());}
 
@@ -659,7 +699,7 @@ function setActiveRinger(n){
   runAllValidation();
 }
 function getFormData(){
-  return{initials:$v('initials'),entryDateTime:$v('entryDateTime'),
+  return{initials:$v('initials'),entryDate:$v('entryDate'),entryTime:$v('entryTime'),
     species:$v('species'),ringType:$v('ringType'),ringNo:$v('ringNo'),
     pittagNo:$v('pittagNo'),pitType:$v('pitType'),
     age:$v('age'),sex:$v('sex'),sexingMethod:$v('sexingMethod'),
@@ -669,7 +709,9 @@ function getFormData(){
 function setFormData(d){
   if(!d||Object.keys(d).length===0){clearFormFields();return;}
   const s=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
-  s('initials',d.initials);s('entryDateTime',d.entryDateTime);
+  const legacyDateTime=d.entryDateTime||'';
+  s('initials',d.initials);s('entryDate',d.entryDate||legacyDateTime.slice(0,10));
+  s('entryTime',d.entryTime||legacyDateTime.slice(10).trim());
   s('species',d.species);s('ringType',d.ringType||'N');s('ringNo',d.ringNo);
   s('pittagNo',d.pittagNo);s('pitType',d.pitType);
   s('age',d.age);s('sex',d.sex);s('sexingMethod',d.sexingMethod);
@@ -732,7 +774,7 @@ function collectValidationIssues(){
   const ring=$v('ringNo').toUpperCase(),species=$v('species').toUpperCase(),sex=$v('sex');
   const age=$v('age'),ringType=$v('ringType'),pitTag=$v('pittagNo').toUpperCase();
   const wing=parseFloat($v('wing')),weight=parseFloat($v('weight'));
-  const entryDate=$v('entryDateTime').trim().slice(0,10);
+  const entryDate=$v('entryDate').trim();
   const ind=ring?getIndividual(ring):null,sp=speciesDB[species];
   if(species&&!sp)issues.push({level:'warn',msg:'"'+species+'" not in species reference list',field:'species'});
   if(sp&&!isNaN(wing)&&((sp.wingMin&&wing<sp.wingMin)||(sp.wingMax&&wing>sp.wingMax)))
@@ -742,7 +784,7 @@ function collectValidationIssues(){
   if(AGE_UNUSUAL.has(age))issues.push({level:'warn',msg:'Age '+age+' is unusual in this field context — are you sure?',field:'age'});
   if(ringType==='N'&&ring){
     if(ind)issues.push({level:'err',msg:'Ring '+ring+' already known — first seen '+(ind.firstSeen||'?')+' as '+(ind.species||'?'),field:'ring'});
-    else if(records.some(r=>r.ringNo&&r.ringNo.toUpperCase()===ring))issues.push({level:'err',msg:'Ring '+ring+' already in today\'s records',field:'ring'});
+    else if(recordsForSession().some(r=>r.ringNo&&r.ringNo.toUpperCase()===ring))issues.push({level:'err',msg:'Ring '+ring+' already in '+sessionId(session.date),field:'ring'});
   }
   if(ringType==='R'&&ring){
     if(!ind){issues.push({level:'warn',msg:'Ring '+ring+' not found in individuals — verify ring number',field:'ring'});}
@@ -764,12 +806,12 @@ function runAllValidation(){
   ['ringNo','species','sex','age','wing','weight','pittagNo'].forEach(f=>setIS(f,''));
   const ring=$v('ringNo').toUpperCase(),species=$v('species').toUpperCase();
   const ringType=$v('ringType'),wing=parseFloat($v('wing')),weight=parseFloat($v('weight'));
-  const entryDate=$v('entryDateTime').trim().slice(0,10);
+  const entryDate=$v('entryDate').trim();
   const ind=ring?getIndividual(ring):null,sp=speciesDB[species];
   if(species&&sp){setFlag('species',sp.name,'ok');setIS('species','ok');}
   if(sp&&!isNaN(wing)&&!(sp.wingMin&&wing<sp.wingMin)&&!(sp.wingMax&&wing>sp.wingMax)){setFlag('wing','✓ '+sp.wingMin+'–'+sp.wingMax+'mm','ok');setIS('wing','ok');}
   if(sp&&!isNaN(weight)&&!(sp.wtMin&&weight<sp.wtMin)&&!(sp.wtMax&&weight>sp.wtMax)){setFlag('weight','✓ '+sp.wtMin+'–'+sp.wtMax+'g','ok');setIS('weight','ok');}
-  if(ringType==='N'&&ring&&!ind&&!records.some(r=>r.ringNo&&r.ringNo.toUpperCase()===ring)){setFlag('ring','✓ New ring','ok');setIS('ringNo','ok');}
+  if(ringType==='N'&&ring&&!ind&&!recordsForSession().some(r=>r.ringNo&&r.ringNo.toUpperCase()===ring)){setFlag('ring','✓ New ring','ok');setIS('ringNo','ok');}
   if(ringType==='R'&&ring&&ind){
     const ageVal=ageValidityForRetrap(ind,entryDate);
     const sug=ageVal?' · suggest age '+ageVal.suggestion:'';
@@ -815,9 +857,8 @@ function trySaveRecord(){
 function doSaveRecord(issues){
   const hasErrors=(issues||[]).some(i=>i.level==='err');
   const hasWarns=(issues||[]).some(i=>i.level==='warn');
-  const dt=$v('entryDateTime').trim();
-  const record={id:Date.now(),savedAt:new Date().toISOString(),
-    date:dt.slice(0,10),time:dt.slice(10).trim(),
+  const record={id:Date.now(),sessionId:session.date,savedAt:new Date().toISOString(),
+    date:$v('entryDate'),time:$v('entryTime'),
     site:session.site,location:$v('location'),
     species:$v('species').toUpperCase(),ringNo:$v('ringNo').toUpperCase(),
     ringType:$v('ringType'),age:$v('age'),sex:$v('sex'),sexingMethod:$v('sexingMethod'),
@@ -876,10 +917,12 @@ function advanceRingSeries(){
   document.getElementById('ringLastNum').value=session.ringLastNum;persist();
 }
 
+function recordsForSession(){return records.filter(r=>(r.sessionId||r.date)===session.date);}
 function renderRecords(){
   const el=document.getElementById('recordsList');
-  if(!records.length){el.innerHTML='<div class="empty-state"><div class="em">📋</div><p>No records yet</p></div>';return;}
-  el.innerHTML=[...records].reverse().map(r=>{
+  const currentRecords=recordsForSession();
+  if(!currentRecords.length){el.innerHTML='<div class="empty-state"><div class="em">📋</div><p>No records yet for '+sessionId(session.date)+'</p></div>';return;}
+  el.innerHTML=[...currentRecords].reverse().map(r=>{
     const detail=[r.ringNo||'—',r.age||'',r.sex||'',r.wing?r.wing+'mm':'',r.weight?r.weight+'g':'',r.pittagNo||''].filter(Boolean).join(' · ');
     const rCol=r.ringer===1?'var(--r1)':r.ringer===2?'var(--r2)':'var(--text3)';
     const dotCls=r.hasErrors?'has-error':r.hasWarns?'has-warn':'';
@@ -978,10 +1021,11 @@ function renderSpeciesRef(){
 }
 
 function updateStats(){
-  const newR=records.filter(r=>r.ringType==='N').length,ret=records.filter(r=>r.ringType==='R').length;
-  const err=records.filter(r=>r.hasErrors).length,pit=records.filter(r=>r.pittagNo).length;
-  document.getElementById('stats').innerHTML='<div class="stat-box"><div class="stat-num">'+records.length+'</div><div class="stat-lbl">Total</div></div><div class="stat-box"><div class="stat-num">'+newR+'</div><div class="stat-lbl">New</div></div><div class="stat-box"><div class="stat-num">'+ret+'</div><div class="stat-lbl">Retraps</div></div><div class="stat-box"><div class="stat-num">'+pit+'</div><div class="stat-lbl">PIT Tagged</div></div><div class="stat-box" style="'+(err?'border-color:var(--err)':'')+'"><div class="stat-num" style="'+(err?'color:var(--err)':'')+'">'+err+'</div><div class="stat-lbl">Flagged</div></div>';
-  const counts={};records.forEach(r=>{if(r.species)counts[r.species]=(counts[r.species]||0)+1;});
+  const currentRecords=recordsForSession();
+  const newR=currentRecords.filter(r=>r.ringType==='N').length,ret=currentRecords.filter(r=>r.ringType==='R').length;
+  const err=currentRecords.filter(r=>r.hasErrors).length,pit=currentRecords.filter(r=>r.pittagNo).length;
+  document.getElementById('stats').innerHTML='<div class="stat-box"><div class="stat-num">'+currentRecords.length+'</div><div class="stat-lbl">Total</div></div><div class="stat-box"><div class="stat-num">'+newR+'</div><div class="stat-lbl">New</div></div><div class="stat-box"><div class="stat-num">'+ret+'</div><div class="stat-lbl">Retraps</div></div><div class="stat-box"><div class="stat-num">'+pit+'</div><div class="stat-lbl">PIT Tagged</div></div><div class="stat-box" style="'+(err?'border-color:var(--err)':'')+'"><div class="stat-num" style="'+(err?'color:var(--err)':'')+'">'+err+'</div><div class="stat-lbl">Flagged</div></div>';
+  const counts={};currentRecords.forEach(r=>{if(r.species)counts[r.species]=(counts[r.species]||0)+1;});
   const ss=document.getElementById('speciesSummary');
   const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
   ss.innerHTML=sorted.length?sorted.map(([sp,n])=>'<div class="species-row"><span style="font-weight:700;color:var(--accent)">'+sp+'</span><span style="color:var(--text2);font-size:12px;flex:1">'+(speciesDB[sp]?.name||'')+'</span><span style="font-weight:800">'+n+'</span></div>').join(''):'<div style="color:var(--text3);font-size:13px">No records yet</div>';
@@ -1012,17 +1056,17 @@ function fileTimestamp(){
   return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'-'+pad(d.getHours())+'-'+pad(d.getMinutes())+'-'+pad(d.getSeconds());
 }
 function downloadCSV(rows,filename){
-  const headers=['location','date','species','ringNo','ringType','age','sex','sexingMethod','wing','weight','fecalSample','time','initials','pittagNo','pitType','comment','site','savedAt','flagged'];
-  const csvRows=rows.map(r=>[r.location,r.date,r.species,r.ringNo,r.ringType,r.age,r.sex,r.sexingMethod,r.wing,r.weight,r.fecalSample,r.time,r.initials,r.pittagNo,r.pitType,r.comment,r.site,r.savedAt,r.hasErrors?'ERROR':r.hasWarns?'WARN':''].map(v=>{const s=String(v===undefined||v===null?'':v);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}));
+  const headers=['sessionId','location','date','species','ringNo','ringType','age','sex','sexingMethod','wing','weight','fecalSample','time','initials','pittagNo','pitType','comment','site','savedAt','flagged'];
+  const csvRows=rows.map(r=>[r.sessionId||r.date,r.location,r.date,r.species,r.ringNo,r.ringType,r.age,r.sex,r.sexingMethod,r.wing,r.weight,r.fecalSample,r.time,r.initials,r.pittagNo,r.pitType,r.comment,r.site,r.savedAt,r.hasErrors?'ERROR':r.hasWarns?'WARN':''].map(v=>{const s=String(v===undefined||v===null?'':v);return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s.replace(/"/g,'""')+'"':s;}));
   const csv=[headers,...csvRows].map(r=>r.join(',')).join('\n');
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');
   a.href=url;a.download=filename;
   a.click();URL.revokeObjectURL(url);
 }
-function exportCSV(){downloadCSV(records,'Quill_Sync_Records_'+fileTimestamp()+'.csv');}
+function exportCSV(){downloadCSV(recordsForSession(),'Quill_Sync_Records_'+fileTimestamp()+'.csv');}
 
-function clearAllRecords(){if(!confirm('Delete all '+records.length+' records?'))return;records=[];persist();renderRecords();updateStats();}
+function clearAllRecords(){const currentRecords=recordsForSession();if(!confirm('Delete all '+currentRecords.length+' records from '+sessionId(session.date)+'?'))return;records=records.filter(r=>(r.sessionId||r.date)!==session.date);persist();renderRecords();updateStats();}
 function resetAll(){if(!confirm('Reset everything including imported individuals?'))return;records=[];importedIndividuals=[];speciesDB={};ringers=[];persist();loadDefaultSpecies(true);renderRecords();renderRingerList();populateInitialsDropdown();updateStats();updateImportStatus();}
 </script>
 </body>

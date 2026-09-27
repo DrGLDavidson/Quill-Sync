@@ -52,7 +52,7 @@ Quill Sync is a browser-based field data entry application for bird ringing and 
 2. **Copy it to your tablet** (via USB, email, cloud sync, or any file transfer method)
 3. **Open it in Chrome or Safari** — tap the file in your file manager, or open your browser and navigate to the file
 4. **Optional: add to home screen** — in Chrome tap ⋮ → *Add to Home screen*; in Safari tap Share → *Add to Home Screen*. This gives a full-screen, app-like experience
-5. **Set up your session** — tap the Session tab and enter your site name, date, and default location; add your ringers and assign them to the toggle bar; set your ring series prefix and last number
+5. **Set up your session** — tap the Session tab and enter your site name, date, and default location; add your ringers and assign them to the toggle bar; set your ring series prefix and last number; tap **Save Session**
 6. **Import your individuals database** (if you have one) — see [Individuals Database](#individuals-database)
 7. **Start entering birds** on the Entry tab
 
@@ -75,6 +75,10 @@ On the **Session tab**:
 | Ringer 1 / Ringer 2 | Assign ringers to the toggle bar slots |
 | Ring Prefix | The letter prefix of your current ring series, e.g. `A` |
 | Last Number Used | The last ring number from your previous session |
+
+The Session Date is the session ID and must use `YYYY-MM-DD`. Sessions are stored separately as `Session_YYYY-MM-DD`. To reopen an existing session, select its date; its site, location, ring series, and assigned initials are loaded automatically. Select a new date to start a new session, complete the fields, and tap **Save Session**.
+
+The Entry tab uses separate Date and Time fields. The date is the active session date, and the time comes from the device's local clock. Both work without an internet connection.
 
 ### Entering a Bird
 
@@ -140,6 +144,7 @@ The following fields are recorded per bird, and exported in this column order:
 | Field | Description |
 |---|---|
 | `location` | Net, trap, or area within site |
+| `sessionId` | Session date in `YYYY-MM-DD` format |
 | `date` | Date of capture (YYYY-MM-DD) |
 | `species` | BTO species code |
 | `ringNo` | BTO ring number |
@@ -292,7 +297,7 @@ This provides an individual backup for each saved record. To export all records 
 Quill_Sync_Records_YYYY-MM-DD-HH-MM-SS.csv
 ```
 
-Both CSV types are UTF-8 encoded with a byte order mark (BOM) for correct Excel compatibility. The session export contains all records currently stored in the app, including a `flagged` column showing ERROR, WARN, or blank for each record.
+Both CSV types are UTF-8 encoded with a byte order mark (BOM) for correct Excel compatibility. The session export contains records for the currently selected session, including a `sessionId` column and a `flagged` column showing ERROR, WARN, or blank for each record.
 
 The browser chooses the download folder; the HTML file cannot specify an arbitrary filesystem path. Set the browser to ask where to save downloads, or configure a dedicated folder such as `Quill Sync/Entry Saves` and `Quill Sync/Session Exports`. Check that the file appears after each save and copy exports to a second device or drive when possible.
 
@@ -315,9 +320,9 @@ Quill Sync is designed to work without internet access in the field. All data is
 ## Technical Notes
 
 - **No server, no database, no accounts** — Quill Sync is a single static HTML file
-- **Storage:** browser `localStorage`, scoped to the file's origin. Approximately 5MB limit — sufficient for thousands of records per session
+- **Storage:** browser `localStorage`, scoped to the file's origin. Sessions are stored under `qs_sessions` using keys such as `Session_2026-09-27`; records are stored under `qs_records` with a matching `sessionId`. Approximately 5MB limit — sufficient for thousands of records per session
 - **Compatibility:** tested in Chrome (Android and desktop) and Safari (iOS). Any modern browser from 2020 onwards should work
-- **Data persistence:** data survives browser restarts but will be lost if you clear browser site data. Export your CSV at the end of every session
+- **Data persistence:** sessions and records survive browser restarts but will be lost if you clear browser site data. Export your CSV at the end of every session
 - **Multiple devices:** data does not sync between devices. Each device maintains its own independent record store. If two scribes are working on separate tablets, export and merge CSVs afterwards
 - **ZXing barcode library:** loaded from `cdnjs.cloudflare.com` on first use. Version pinned to 0.21.3 for stability
 - **File size:** approximately 150KB including the embedded logo
